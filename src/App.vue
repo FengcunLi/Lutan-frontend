@@ -1,57 +1,60 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary" dark>
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-    </v-app-bar>
-
+    <AppBar />
     <v-main>
-      <HelloWorld />
+      <router-view :key="$route.path" />
     </v-main>
+    <AccountModalComponent />
+    <v-snackbar
+      top
+      v-for="(snackbar, index) in snackbars"
+      :style="`padding-top: ${index * 60 + 8}px`"
+      :key="snackbar.id"
+      :color="snackbar.color"
+      :timeout="snackbar.timeout"
+      @input="onClose(snackbar)"
+      :value="true"
+    >
+      {{ snackbar.message }}
+      <template v-slot:action="{ attrs }">
+        <v-btn text v-bind="attrs" @click="onClose(snackbar)">Close</v-btn>
+      </template>
+    </v-snackbar>
   </v-app>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import HelloWorld from "./components/HelloWorld.vue";
+import { Component, Vue } from 'vue-property-decorator';
+import AccountModalComponent from '@/components/account/AccountModalComponent.vue';
+import { Snackbar, snackbarsModule } from '@/store/modules/snackbars';
+import AppBar from '@/components/AppBar.vue';
 
-export default Vue.extend({
-  name: "App",
-
+@Component({
   components: {
-    HelloWorld
+    AccountModalComponent,
+    AppBar,
   },
+})
+export default class App extends Vue {
+  private get snackbars() {
+    return snackbarsModule.snackbars;
+  }
 
-  data: () => ({
-    //
-  })
-});
+  onClose(snackbar: Snackbar) {
+    snackbarsModule.removeSnackbar(snackbar);
+  }
+}
 </script>
+
+<style lang="scss" scoped></style>
+
+<style lang="scss">
+a {
+  text-decoration: none;
+  // color: inherit;
+}
+
+.v-slide-group__prev {
+  display: none !important;
+}
+</style>
