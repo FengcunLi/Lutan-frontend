@@ -3,4 +3,9 @@ module.exports = {
   configureWebpack: {
     devtool: 'source-map',
   },
+
+  chainWebpack: config => {
+    // remove the prefetch plugin
+    config.plugins.delete('prefetch');
+  },
 };
