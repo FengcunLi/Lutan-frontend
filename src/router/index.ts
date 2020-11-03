@@ -18,18 +18,22 @@ const routes: Array<RouteConfig> = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
-      import(/* webpackChunkName: "about" */ '../views/About.vue'),
+      import(/* webpackChunkName: "About" */ '../views/About.vue'),
   },
   {
     path: '/threads',
     name: 'Threads',
     props: true,
-    component: () => import('../views/threads/Index.vue'),
+    component: () =>
+      import(/* webpackChunkName: "Index" */ '../views/threads/Index.vue'),
     children: [
       {
         path: 'create',
         name: 'ThreadCreate',
-        component: () => import('../views/threads/ThreadCreate.vue'),
+        component: () =>
+          import(
+            /* webpackChunkName: "ThreadCreate" */ '../views/threads/ThreadCreate.vue'
+          ),
       },
       {
         path: ':id',
@@ -44,13 +48,19 @@ const routes: Array<RouteConfig> = [
             path: '',
             name: 'ThreadRetrieve',
             props: true,
-            component: () => import('../views/threads/ThreadRetrieve.vue'),
+            component: () =>
+              import(
+                /* webpackChunkName: "ThreadRetrieve" */ '../views/threads/ThreadRetrieve.vue'
+              ),
           },
           {
             path: 'edit',
             name: 'ThreadEdit',
             props: true,
-            component: () => import('../views/threads/ThreadEdit.vue'),
+            component: () =>
+              import(
+                /* webpackChunkName: "ThreadEdit" */ '../views/threads/ThreadEdit.vue'
+              ),
           },
         ],
       },
